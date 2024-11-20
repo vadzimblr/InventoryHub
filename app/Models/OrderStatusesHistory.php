@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderStatusesHistory extends Model
@@ -11,12 +10,17 @@ class OrderStatusesHistory extends Model
         'order_id',
         'updated_at',
         'status',
+        'changed_by'
     ];
     public function order(){
         return $this->belongsTo(Order::class, 'order_id');
     }
-    protected $casts = [
-        'status' => OrderStatus::class,
-    ];
+    public function changedBy(){
+        return $this->belongsTo(User::class, 'changed_by');
+    }
+    public function status()
+    {
+        return $this->belongsTo(OrderStatus::class, 'status');
+    }
 
 }

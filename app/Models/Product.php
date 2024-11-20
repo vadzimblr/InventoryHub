@@ -13,6 +13,8 @@ class Product extends Model
         'description',
         'price',
         'quantity',
+        'unit',
+        'is_whole_unit',
         'supplier_id',
         'created_by',
         'created_at',

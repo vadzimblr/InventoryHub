@@ -8,7 +8,9 @@ class SupplierOrderItem extends Model
 {
     protected $fillable = [
         'quantity',
-        'total_price',
+        'unit',
+        'is_whole_unit',
+        'total_amount',
         'product_id',
         'supplier_order_id',
     ];
@@ -17,5 +19,13 @@ class SupplierOrderItem extends Model
     }
     public function supplierOrder(){
         return $this->belongsTo(SupplierOrder::class,'supplier_order_id');
+    }
+    protected static function booted(): void
+    {
+        static::saving(function ($item) {
+            if ($item->product) {
+                $item->total_amount = $item->quantity * $item->product->price;
+            }
+        });
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class SupplierOrder extends Model
@@ -22,5 +21,15 @@ class SupplierOrder extends Model
     }
     public function orderStatus(){
         return $this->belongsTo(OrderStatus::class,'order_status_id');
+    }
+    protected static function booted()
+    {
+        static::saving(function ($order) {
+            $totalAmount = $order->supplierOrderItems->sum(function ($item) {
+                return $item->total_amount;
+            });
+
+            $order->total_amount = $totalAmount;
+        });
     }
 }

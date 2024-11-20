@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
@@ -22,5 +21,23 @@ class Order extends Model
     }
     public function orderStatusHistory(){
         return $this->hasMany(OrderStatusesHistory::class,'order_id');
+    }
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class, 'order_id');
+    }
+    public function calculateTotalAmount()
+    {
+        $totalAmount = $this->orderItems->sum(function ($item) {
+            return $item->quantity * $item->price;
+        });
+
+        $this->total_amount = $totalAmount;
+    }
+    protected static function booted()
+    {
+        static::saving(function ($order) {
+            $order->calculateTotalAmount();
+        });
     }
 }

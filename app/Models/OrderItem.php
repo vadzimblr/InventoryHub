@@ -8,7 +8,9 @@ class OrderItem extends Model
 {
     protected $fillable = [
         'quantity',
-        'total_price',
+        'unit',
+        'is_whole_unit',
+        'total_amount',
         'product_id',
         'order_id',
     ];
@@ -17,5 +19,13 @@ class OrderItem extends Model
     }
     public function order(){
         return $this->belongsTo(Order::class, 'order_id');
+    }
+    protected static function booted(): void
+    {
+        static::saving(function ($item) {
+            if ($item->product) {
+                $item->total_amount = $item->quantity * $item->product->price;
+            }
+        });
     }
 }
