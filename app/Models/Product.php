@@ -14,11 +14,13 @@ class Product extends Model
         'price',
         'quantity',
         'supplier_id',
+        'created_by',
+        'created_at',
     ];
     public function supplier(){
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Supplier::class,'supplier_id');
     }
-    public function orders(){
-        return $this->belongsToMany(Order::class);
+    public function creatorId(){
+        return $this->belongsTo(User::class,'created_by');
     }
 }
