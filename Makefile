@@ -64,6 +64,8 @@ install-database:
 
 install-migrations:
 	docker compose run --rm -u www-data php bash -c "php artisan migrate"
+install-frontend-packages:
+	docker compose run --rm frontend bash -c "npm install"
 
 ### commands
 

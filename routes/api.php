@@ -16,3 +16,4 @@ Route::get('/admin-dashboard', function (Request $request) {
 })->middleware(['auth:sanctum','role:admin']);
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
