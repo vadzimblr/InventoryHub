@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\UserLoginDto;
 use App\DTOs\UserRegistrationDto;
 use App\Exceptions\AuthenticationFailedException;
 use App\Models\User;
@@ -16,25 +17,26 @@ class AuthController extends Controller
         private readonly AuthenticationServiceInterface $authenticationService
     ){}
     public function login(Request $request){
+        $userLoginDto = new UserLoginDto(
+            $request->get('email'),
+            $request->get('password'),
+        );
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.']
-            ]);
+        try{
+            $token = $this->authenticationService->loginUser($userLoginDto);
+            return response()->json([
+                'token' => $token,
+                'redirect' => '/products'
+            ], 200);
+        }catch (ValidationException $e){
+            return back()->withErrors(['message' => $e->getMessage()]);
         }
 
-
-        $token = $user->createToken('API Token')->plainTextToken;
-
-        return response()->json([
-            'token' => $token
-        ], 200);
     }
     public function register(Request $request){
         try {

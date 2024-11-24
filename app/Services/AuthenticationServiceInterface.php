@@ -9,5 +9,5 @@ use App\DTOs\UserRegistrationDto;
 interface AuthenticationServiceInterface
 {
     public function registerUser(UserRegistrationDto $userRegistrationDto): void;
-    public function loginUser(UserLoginDto $userLoginDto);
+    public function loginUser(UserLoginDto $userLoginDto): string;
 }

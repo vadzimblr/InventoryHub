@@ -8,6 +8,7 @@ use App\Exceptions\AuthenticationFailedException;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthenticationService implements AuthenticationServiceInterface
 {
@@ -34,9 +35,19 @@ class AuthenticationService implements AuthenticationServiceInterface
         $user->assignRole('client');
     }
 
-    public function loginUser(UserLoginDto $userLoginDto)
+    /**
+     * @throws AuthenticationFailedException
+     * @throws ValidationException
+     */
+    public function loginUser(UserLoginDto $userLoginDto): string
     {
-        return;
-        // TODO: Implement loginUser() method.
+        $user = User::where('email', $userLoginDto->email)->first();
+        if (!$user || !Hash::check($userLoginDto->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.']
+            ]);
+        }
+
+        return $user->createToken('API Token')->plainTextToken;
     }
 }
