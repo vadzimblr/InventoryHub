@@ -44,10 +44,8 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { Inertia } from "@inertiajs/inertia";
+import {setAuthorizationToken} from "../app.js";
 import axios from "axios";
-import { setAuthorizationToken } from "../app.js";
 
 export default {
     data() {
@@ -75,8 +73,6 @@ export default {
 
                 setAuthorizationToken(token);
 
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
                 window.location.href = '/products'
 
             } catch (err) {
@@ -90,5 +86,5 @@ export default {
 </script>
 
 <style scoped>
-/* Дополнительные стили, если нужно */
+
 </style>

@@ -16,6 +16,9 @@ Route::get('/register', function () {
     return Inertia::render('Register');
 })->name('register')->middleware('guest');
 
-Route::match(['POST','GET'],'/products', function () {
+Route::match(['GET'],'/products', function () {
     return Inertia::render('Products');
+});
+Route::get('/admin-panel', function () {
+    return Inertia::render('Admin');
 });

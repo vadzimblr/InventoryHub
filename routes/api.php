@@ -17,8 +17,3 @@ Route::get('/admin-dashboard', function (Request $request) {
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
-Route::get('/test-route',function (Request $request) {
-    return response()->json([
-        'message' => 'Test Route',
-    ]);
-})->middleware(['auth:sanctum']);
