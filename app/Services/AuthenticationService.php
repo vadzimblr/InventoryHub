@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOs\Response\UserDto;
 use App\DTOs\UserLoginDto;
 use App\DTOs\UserRegistrationDto;
 use App\Exceptions\AuthenticationFailedException;
@@ -9,13 +10,15 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Role;
 
 class AuthenticationService implements AuthenticationServiceInterface
 {
     /**
      * @throws AuthenticationFailedException
+     * @throws \Exception
      */
-    public function registerUser(UserRegistrationDto $userRegistrationDto): void
+    public function registerUser(UserRegistrationDto $userRegistrationDto): UserDto
     {
         if($userRegistrationDto->password !== $userRegistrationDto->passwordConfirmation){
             throw new AuthenticationFailedException('The password and its confirmation do not match.');
@@ -25,6 +28,11 @@ class AuthenticationService implements AuthenticationServiceInterface
             throw new AuthenticationFailedException('The email address is already taken.');
         }
 
+        $role = trim($userRegistrationDto->role);
+        if (!Role::where('name', $role)->exists()) {
+            throw new \Exception('The role "'. $role .'" does not exist.');
+        }
+
         $user = new User();
         $user->name = $userRegistrationDto->name;
         $user->email = $userRegistrationDto->email;
@@ -32,7 +40,8 @@ class AuthenticationService implements AuthenticationServiceInterface
         $user->email_verified_at = Carbon::now();
         $user->save();
 
-        $user->assignRole('client');
+        $user->assignRole($role);
+        return UserDto::fromModel($user);
     }
 
     /**

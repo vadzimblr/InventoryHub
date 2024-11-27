@@ -3,13 +3,13 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 axios.defaults.withXSRFToken = true;
-// Устанавливаем Authorization-заголовок для всех запросов
+import Toast from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
 const token = localStorage.getItem('authToken');
 if (token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
 
-// Экспортируем функцию для обновления токена, если нужно
 export function setAuthorizationToken(token) {
     if (token) {
         localStorage.setItem('authToken', token);
@@ -28,6 +28,12 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
+            .use(Toast, {
+                timeout: 3000,
+                position: 'top-right',
+                closeOnClick: true,
+                hideProgressBar: true,
+            })
             .mount(el);
     },
 });

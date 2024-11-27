@@ -14,6 +14,11 @@ export default defineConfig({
             usePolling:true
         }
     },
+    resolve: {
+        alias: {
+            '@': '/resources',
+        },
+    },
     plugins: [
         vue(),
         laravel({

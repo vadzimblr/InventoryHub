@@ -14,24 +14,31 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = ['admin','client'];
+        $roles = ['admin',
+                  'client',
+                  'accountant',
+                  'account-manager',
+                  'purchasing-manager',
+                  'storekeeper'
+            ];
+
 
         foreach ($roles as $roleName) {
             Role::firstOrCreate(['name' => $roleName]);
         }
 
-        $permissions = [
-            'edit users',
-        ];
-
-        foreach ($permissions as $permissionName) {
-            Permission::firstOrCreate(['name' => $permissionName]);
-        }
-
-        $adminRole = Role::where('name', 'admin')->first();
-        if ($adminRole) {
-            $adminRole->givePermissionTo(['edit users']);
-        }
+//        $permissions = [
+//            'edit users',
+//        ];
+//
+//        foreach ($permissions as $permissionName) {
+//            Permission::firstOrCreate(['name' => $permissionName]);
+//        }
+//
+//        $adminRole = Role::where('name', 'admin')->first();
+//        if ($adminRole) {
+//            $adminRole->givePermissionTo(['edit users']);
+//        }
 
     }
 }

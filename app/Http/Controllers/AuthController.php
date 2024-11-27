@@ -45,7 +45,7 @@ class AuthController extends Controller
                 $request->email,
                 $request->password,
                 $request->password_confirmation,
-                'client'
+                $request?->role
             );
 
             $this->authenticationService->registerUser($userRegistrationDto);

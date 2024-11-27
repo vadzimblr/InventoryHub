@@ -2,6 +2,7 @@
 
 namespace App\DTOs;
 
+use App\Models\User;
 use Spatie\LaravelData\Data;
 
 class UserRegistrationDto extends Data
@@ -11,6 +12,7 @@ class UserRegistrationDto extends Data
       public readonly string $email,
       public readonly string $password,
       public readonly string $passwordConfirmation,
-      public readonly string $role
+      public readonly ?string $role
     ){}
+
 }

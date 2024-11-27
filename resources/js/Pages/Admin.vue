@@ -49,8 +49,8 @@
                 <div class="form-group">
                     <label for="role">Role</label>
                     <select id="role" v-model="form.role" required>
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
+                        <option disabled value="">Select a role</option> <!-- Псевдо-опция, если роли нет -->
+                        <option v-for="role in roles" :key="role" :value="role">{{ role }}</option>
                     </select>
                 </div>
                 <button type="submit" class="btn">Create</button>
@@ -83,6 +83,11 @@
 </template>
 
 <script>
+import axios from "axios";
+import "@/css/admin-dashboard.css";
+import { useToast } from 'vue-toastification';
+import {data} from "autoprefixer";
+
 export default {
     data() {
         return {
@@ -91,126 +96,96 @@ export default {
                 email: "",
                 password: "",
                 password_confirmation: "",
-                role: "user",
+                role: "",
             },
-            users: [], // Array to hold the list of users
+            users: [],
+            roles: [],
         };
     },
+
+    setup() {
+        const toast = useToast();
+        return { toast };
+    },
+
     methods: {
         async createUser() {
             try {
-                // Replace with actual API endpoint
-                const response = await axios.post("/api/users", this.form);
-                alert("User created successfully!");
-                this.users.push(response.data.user); // Add the new user to the list
+                const response = await axios.post("/api/admin/addUser", this.form);
+                this.toast.success("User created successfully!");
+                console.log(response.data)
+                this.users.push(response.data.user);
                 this.resetForm();
             } catch (error) {
-                alert("Error creating user: " + error.response.data.message);
+                this.toast.error("Error creating user: " + (error.response?.data?.message || error.message)); // Уведомление об ошибке
             }
         },
+
         resetForm() {
             this.form = {
                 name: "",
                 email: "",
                 password: "",
                 password_confirmation: "",
-                role: "user",
+                role: this.roles.length > 0 ? this.roles[0] : "",
             };
         },
+
         async fetchUsers() {
             try {
-                const response = await axios.get("/api/users"); // Replace with actual API endpoint
-                this.users = response.data.users;
+                const response = await axios.get("/api/admin/showAllUsers");
+                this.users = response.data;
             } catch (error) {
-                alert("Error fetching users: " + error.response.data.message);
+                this.toast.error("Error fetching users: " + (error.response?.data?.message || error.message)); // Уведомление об ошибке
             }
         },
+
+        async fetchRoles() {
+            try {
+                const response = await axios.get("/api/admin/showAllRoles");
+                this.roles = response.data;
+
+                if (this.roles.length > 0) {
+                    this.form.role = this.roles[0];
+                }
+
+                const token = localStorage.getItem('authToken');
+                console.log(token)
+            } catch (error) {
+                this.toast.error("Error fetching roles: " + (error.response?.data?.message || error.message)); // Уведомление об ошибке
+            }
+        },
+        async checkUserRole() {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                try {
+                    const response = await axios.get("/api/user/role");
+                    console.log(response.data)
+                    if (response.data.role === 'admin') {
+                        this.isAdmin = true;
+                    } else {
+                        this.isAdmin = false;
+                        this.toast.error('You do not have access to the admin panel.');
+                        this.$router.push('/home');
+                    }
+                } catch (error) {
+                    this.toast.error("Error fetching user role: " + (error.response?.data?.message || error.message));
+                }
+            } else {
+                this.toast.error('No token found, please log in again.');
+                // Перенаправляем на страницу входа
+                this.$router.push('/login');
+            }
+        }
     },
+
     mounted() {
-        this.fetchUsers(); // Fetch users when the component is mounted
+        this.checkUserRole()
+        this.fetchUsers();
+        this.fetchRoles();
     },
 };
 </script>
 
 <style scoped>
-.admin-page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-h1,
-h2 {
-    text-align: center;
-    color: #333;
-}
-
-.form-section,
-.users-section {
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-}
-
-.form-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.form-group input,
-.form-group select {
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.btn {
-    padding: 10px;
-    font-size: 16px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-}
-
-.users-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-.users-table th,
-.users-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-}
-
-.users-table th {
-    background-color: #f4f4f4;
-    font-weight: bold;
-}
-
-.users-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
 </style>
