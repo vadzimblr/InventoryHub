@@ -8,7 +8,7 @@ enum RoleType: string
     case Client = 'client';
     case Accountant = 'accountant';
     case AccountManager = 'account-manager';
-    case PurchasingManager = 'purchasing-manager';
+    case ProcurementManager = 'procurement-manager';
     case Storekeeper = 'storekeeper';
 
 }

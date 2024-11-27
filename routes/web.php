@@ -19,6 +19,9 @@ Route::get('/register', function () {
 Route::match(['GET'],'/products', function () {
     return Inertia::render('Products');
 });
-Route::get('/admin-panel', function () {
+Route::get('/admin-dashboard', function () {
     return Inertia::render('Admin');
+});
+Route::get('/procurement-manager-dashboard', function () {
+    return Inertia::render('ProcurementManager');
 });

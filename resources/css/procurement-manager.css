@@ -1,0 +1,132 @@
+/* Навигация на всю ширину экрана */
+.header {
+    background-color: #334155; /* Глубокий серый с оттенком синего */
+    padding: 10px 0;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0 20px;
+    margin: 0 auto;
+}
+
+/* Кнопки навигации */
+button {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #e2e8f0; /* Светло-серый */
+    background-color: #475569; /* Тусклый серый */
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+button.active {
+    background-color: #16a34a; /* Зеленый */
+    color: #ffffff; /* Белый */
+}
+
+button:hover {
+    background-color: #22c55e; /* Светлый зеленый */
+    color: #ffffff;
+}
+
+/* Основной контент */
+.main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.content {
+    background-color: #f1f5f9; /* Светло-серый */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    max-width: 800px;
+    animation: fadeIn 0.3s ease-in-out;
+
+}
+
+/* Стили форм */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form input,
+form select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #cbd5e1; /* Светлый серый */
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+form input:focus,
+form select:focus {
+    outline: none;
+    border-color: #0ea5e9; /* Голубой */
+}
+
+form button {
+    padding: 10px 15px;
+    background-color: #16a34a; /* Зеленый */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #15803d; /* Темный зеленый */
+}
+
+/* Дополнительные элементы формы */
+form h3 {
+    margin-bottom: 10px;
+}
+
+form button.remove-item {
+    background-color: #ef4444; /* Красный */
+}
+
+form button.remove-item:hover {
+    background-color: #dc2626; /* Темный красный */
+}
+
+/* Стили заголовков */
+h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #1e293b; /* Темно-синий */
+    text-align: center;
+}
+
+/* Эффект появления контента */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
