@@ -161,20 +161,17 @@ export default {
                 try {
                     const response = await axios.get("/api/user/role");
                     console.log(response.data)
-                    if (response.data.role === 'admin') {
-                        this.isAdmin = true;
-                    } else {
-                        this.isAdmin = false;
-                        this.toast.error('You do not have access to the admin panel.');
-                        this.$router.push('/home');
+                    if (response.data.role !== 'admin') {
+                        document.title = 'Unauthenticated';
+                        window.location.href = '/login';
                     }
                 } catch (error) {
                     this.toast.error("Error fetching user role: " + (error.response?.data?.message || error.message));
                 }
             } else {
                 this.toast.error('No token found, please log in again.');
-                // Перенаправляем на страницу входа
-                this.$router.push('/login');
+                document.title = 'Unauthenticated';
+                window.location.href = '/login';
             }
         }
     },
