@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserCredentialsController;
@@ -21,13 +22,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/supplier/{id}',[SupplierController::class,'deleteSupplier']);
     Route::put('/supplier/{id}',[SupplierController::class,'updateSupplier']);
 
-    Route::get('client/products/',[ProductController::class,'showAllProductsForClients']);
+    Route::get('client/products',[ProductController::class,'showAllProductsForClients']);
+    Route::post('client/order',[OrderController::class,'placeOrder']);
+
     Route::post('/product',[ProductController::class,'createProduct']);
     Route::put('/product/{id}',[ProductController::class,'updateProduct']);
     Route::get('/products',[ProductController::class,'showAllProducts']);
     Route::get('/product/{id}',[ProductController::class,'showProduct']);
     Route::post('/product/{id}/add-stock/{amount}',[ProductController::class,'addStock']);
     Route::post('/product/{id}/remove-stock/{amount}',[ProductController::class,'removeStock']);
+
+
 });
 
 Route::post('/login', [AuthController::class, 'login']);

@@ -3,27 +3,20 @@
 namespace App\DTOs\Request;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\Validator;
 use Spatie\LaravelData\Attributes\Validation\Rule;
 use Spatie\LaravelData\Data;
 
 class ProductRequestDto extends Data
 {
     public function __construct(
-        #[Rule('required|string|max:255')]
         private readonly string $name,
-        #[Rule('required|numeric|min:0')]
         private readonly float $price,
-        #[Rule('required|integer|exists:suppliers,id')]
         private readonly int $supplierId,
-        #[Rule('required|integer|exists:users,id')]
         private readonly int $createdBy,
-        #[Rule('required|numeric|min:0')]
         private readonly float $quantity,
-        #[Rule('required|string|max:10')]
         private readonly string $unit,
-        #[Rule('boolean')]
         private readonly bool $isWholeUnit = true,
-        #[Rule('nullable|string|max:500')]
         private readonly ?string $description = null,
 
     ) {}
@@ -53,4 +46,5 @@ class ProductRequestDto extends Data
         $product->created_by = $this->createdBy;
         return $product;
     }
+
 }

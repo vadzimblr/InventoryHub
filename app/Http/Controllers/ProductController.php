@@ -28,6 +28,7 @@ class ProductController extends Controller
 
     public function createProduct(Request $request): JsonResponse{
         $productRequestDto = ProductRequestDto::fromArray($request->all());
+        $productRequestDto->
         $responseContent = $this->productService->storeProduct($productRequestDto);
         return response()->json($responseContent,201);
     }
