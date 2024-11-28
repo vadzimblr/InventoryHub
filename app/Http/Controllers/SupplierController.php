@@ -28,7 +28,7 @@ class SupplierController extends Controller
             name: $validated['name'],
             address: $validated['address']
         );
-        $supplierResDto = $this->supplierService->addSupplier($supplierReqDto);
+        $supplierResDto = $this->supplierService->storeSupplier($supplierReqDto);
         return response()->json($supplierResDto, 201);
     }
     public function deleteSupplier(Request $request): JsonResponse{

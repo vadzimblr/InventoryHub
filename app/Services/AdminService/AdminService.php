@@ -33,7 +33,7 @@ readonly class AdminService implements Api\AdminServiceInterface
         }, $roleDtos);
     }
 
-    public function addUser(UserRegistrationDto $userRegistrationDto): UserDto
+    public function storeUser(UserRegistrationDto $userRegistrationDto): UserDto
     {
         return $this->authService->registerUser($userRegistrationDto);
     }

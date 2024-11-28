@@ -18,7 +18,7 @@ class SupplierService implements SupplierServiceInterface
         return SupplierResponseDto::collectionFromModels($suppliers);
     }
 
-    public function addSupplier(SupplierRequestDto $supplierRequestDto): SupplierResponseDto
+    public function storeSupplier(SupplierRequestDto $supplierRequestDto): SupplierResponseDto
     {
         $supplier = new Supplier();
         $supplier->name = $supplierRequestDto->name;

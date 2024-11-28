@@ -5,8 +5,6 @@ services:
       target: develop
       args:
         HOST_UID: 1000
-    environment:
-      - PHP_IDE_CONFIG=serverName=devserver
     volumes:
       - ./:/var/www/html/app
       - ./docker/php/assets/xdebug.ini:/usr/local/etc/php/conf.d/zz-xdebug.ini

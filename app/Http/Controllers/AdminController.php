@@ -43,7 +43,7 @@ class AdminController extends Controller
             role: $validated['role'] ?? null
         );
 
-        return response()->json(["user"=>$this->adminService->addUser($userDto)], 201);
+        return response()->json(["user"=>$this->adminService->storeUser($userDto)], 201);
     }
 
 }

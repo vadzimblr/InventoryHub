@@ -9,5 +9,5 @@ interface AdminServiceInterface
 {
     public function getAllUsers(): array;
     public function getAllRoles(): array;
-    public function addUser(UserRegistrationDto $userRegistrationDto): UserDto;
+    public function storeUser(UserRegistrationDto $userRegistrationDto): UserDto;
 }
