@@ -48,7 +48,10 @@ return Application::configure(basePath: dirname(__DIR__))
                     'error' => $e->getMessage()
                 ], 500);
             }
-            return response()->view('errors.general', ['message' => 'An error occurred'], 500);
+            return response()->json([
+                'message' => 'Server error',
+                'error' => $e->getMessage()
+            ], 500);
         }
         );
     })->create();

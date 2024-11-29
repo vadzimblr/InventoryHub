@@ -25,4 +25,8 @@ class OrderClientResponseDto extends Data
             orderItems: OrderItemClientResponseDto::fromCollection($order->orderItems)
         );
     }
+    public static function fromCollection($orders): array
+    {
+        return $orders->map(fn(Order $order) => self::fromModel($order))->toArray();
+    }
 }

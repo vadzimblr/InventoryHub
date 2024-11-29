@@ -56,4 +56,24 @@ class OrderService implements Api\OrderServiceInterface
         DB::commit();
         return OrderClientResponseDto::fromModel($order);
     }
+
+    public function showOrderDetails(int $userId, int $orderId): OrderClientResponseDto
+    {
+        $user = User::find($userId);
+        if (!$user) {
+            throw new \Exception("User not found");
+        }
+
+        $order = Order::with(['orderItems.product', 'currentStatus'])
+            ->where('id', $orderId)
+            ->where('client_id', $userId)
+            ->first();
+
+        if (!$order) {
+            throw new \Exception("Order not found or does not belong to the user");
+        }
+
+        return OrderClientResponseDto::fromModel($order);
+    }
+
 }
