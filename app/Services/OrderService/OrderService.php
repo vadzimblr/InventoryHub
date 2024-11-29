@@ -75,5 +75,23 @@ class OrderService implements Api\OrderServiceInterface
 
         return OrderClientResponseDto::fromModel($order);
     }
+    public function getAllOrders(int $userId): array
+    {
+        $user = User::find($userId);
+        if (!$user) {
+            throw new \Exception("User not found");
+        }
+
+        $orders = Order::with(['orderItems.product', 'currentStatus'])
+            ->where('client_id', $userId)
+            ->get();
+
+        $responseDtos = [];
+        if (!$orders->isEmpty()) {
+            $responseDtos = OrderClientResponseDto::fromCollection($orders);
+        }
+
+        return $responseDtos;
+    }
 
 }

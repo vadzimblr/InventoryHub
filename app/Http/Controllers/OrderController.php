@@ -15,7 +15,9 @@ class OrderController extends Controller
     {}
 
     public function placeOrder(Request $request){
-        $orderDto = OrderRequestDto::fromArray($request->all());
+        $params = $request->all();
+        $params['clientId'] = Auth::id();
+        $orderDto = OrderRequestDto::fromArray($params);
         $responseDto = $this->orderService->placeOrder($orderDto);
         return response($responseDto,200);
     }
@@ -23,5 +25,10 @@ class OrderController extends Controller
         $userId = Auth::user()->id;
         $responseDto = $this->orderService->showOrderDetails($userId, $orderId);
         return response($responseDto,200);
+    }
+    public function showAllOrders(Request $request){
+        $userId = Auth::user()->id;
+        $responseDtos = $this->orderService->getAllOrders($userId);
+        return response($responseDtos,200);
     }
 }

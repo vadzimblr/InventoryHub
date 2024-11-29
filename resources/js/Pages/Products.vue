@@ -1,35 +1,52 @@
 <template>
-    <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-        <h1 class="text-2xl font-semibold mb-6">Products</h1>
+    <div class="w-full h-full ">
+        <header class="header">
+            <nav class="navbar">
+                <button @click="currentView = 'AllProducts'" :class="{ active: currentView === 'AllProducts' }">
+                    Продукты
+                </button>
+                <button @click="currentView = 'Order'" :class="{ active: currentView === 'Order' }">
+                    Заказы
+                </button>
+                <button @click="currentView = 'Notifications'" :class="{ active: currentView === 'Notifications' }">
+                    Выйти
+                </button>
+            </nav>
+        </header>
 
-        <div v-if="user" class="mb-6">
-            <h2 class="text-xl">Hello, {{ user.name }}</h2>
-            <p>Your email: {{ user.email }}</p>
-        </div>
-
-        <!-- Здесь будет список товаров -->
-        <div>
-            <!-- Пример вывода списка товаров -->
-            <p>Товары для вас:</p>
-            <!-- Сюда можно вставить логику для вывода товаров -->
-        </div>
+        <main class="main">
+            <component :is="currentView" class="content" />
+        </main>
     </div>
 </template>
 
 <script>
+
+
+import AllProducts from "../Components/ProductComponents/AllProducts.vue";
+import Order from "../Components/ProductComponents/Order.vue";
+
 export default {
+    components: {
+        AllProducts,
+        Order
+    },
+    data() {
+        return {
+            currentView: "AllProducts",
+        };
+    },
     props: {
-        user: Object,  // Пропс для получения данных пользователя
+        user: Object,
     },
     mounted() {
         if(localStorage.getItem('authToken') == null){
             return window.location.href = '/login'
         }
-        console.log('User data:', this.user);  // Для тестирования, чтобы увидеть данные
+        console.log('User data:', this.user);
     },
 };
 </script>
 
 <style scoped>
-/* Добавьте свои стили */
 </style>

@@ -12,6 +12,7 @@ class OrderClientResponseDto extends Data
         public readonly int $id,
         public readonly float $totalAmount,
         public readonly string $status,
+        public readonly string $address,
         public readonly string $createdAt,
         public readonly array $orderItems,
     ){}
@@ -21,6 +22,7 @@ class OrderClientResponseDto extends Data
             id: $order->id,
             totalAmount: $order->total_amount,
             status: $order->currentStatus->name ?? 'Unknown Status',
+            address: $order->address,
             createdAt: $order->created_at->format('d.m.Y H:i'),
             orderItems: OrderItemClientResponseDto::fromCollection($order->orderItems)
         );
