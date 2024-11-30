@@ -6,7 +6,7 @@
                 <button @click="currentTab = 'clientInvoices'" :class="{ active: currentTab === 'clientInvoices' }">
                     Счета клиентам
                 </button>
-                <button @click="currentTab = 'supplierInvoices'" :class="{ active: currentTab === 'supplierInvoices' }">
+                <button @click="currentTab = 'supplierOrders'" :class="{ active: currentTab === 'supplierOrders' }">
                     Счета поставщикам
                 </button>
                 <button @click="logout">
@@ -20,9 +20,8 @@
             <div v-if="currentTab === 'clientInvoices'" class="content">
                 <ClientInvoices />
             </div>
-            <div v-if="currentTab === 'supplierInvoices'" class="content">
-                <h3>Счета поставщикам</h3>
-                <p>Здесь будет функционал для выставленных и оплаченных нами счетов.</p>
+            <div v-if="currentTab === 'supplierOrders'" class="content">
+                <SupplierOrders />
             </div>
         </main>
     </div>
@@ -31,6 +30,7 @@
 <script setup>
 import { ref } from "vue";
 import ClientInvoices from "../Components/Accountant/ClientInvoices.vue";
+import SupplierOrders from "../Components/Accountant/SupplierOrders.vue";
 
 const currentTab = ref("clientInvoices");
 
