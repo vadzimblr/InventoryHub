@@ -51,12 +51,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/procurement-manager/supplier-orders/supplier/{supplierId}',[SupplierOrderController::class,'getAllSupplierOrders']);
 
     Route::post('/accountant/invoice',[PaymentController::class,'createInvoice']);
+    Route::get('/accountant/invoices/client/{clientId}',[PaymentController::class,'showInvoicesByClientId']);
     Route::get('/invoice/{invoiceId}',[PaymentController::class,'showInvoice']);
     Route::get('/invoice/order/{orderId}',[PaymentController::class,'showInvoiceByOrderId']);
 
     Route::patch('/order/{orderId}/status/mark-as-shipped',[OrderStatusController::class,'markOrderAsShipped']);
     Route::patch('/order/{orderId}/status',[OrderStatusController::class,'updateOrderStatus']);
     Route::get('/orders/status/{status}',[OrderStatusController::class,'getOrdersByStatus']);
+    Route::get('/order/{id}/status/processing',[OrderStatusController::class,'getProcessingOrderById']);
 
 });
 

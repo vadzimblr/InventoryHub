@@ -54,6 +54,20 @@ class PaymentService implements PaymentServiceInterface
 
         return InvoiceResponseDto::fromModel($invoice);
     }
+    public function getInvoicesByClientId(int $clientId): array
+    {
+        $invoices = Invoice::whereHas('order', function ($query) use ($clientId) {
+            $query->where('client_id', $clientId)
+                ->whereHas('currentStatus', function ($statusQuery) {
+                    $statusQuery->whereIn('name', [
+                        OrderStatusType::Paid->value,
+                        OrderStatusType::Unpaid->value
+                    ]);
+                });
+        })->get();
+
+        return InvoiceResponseDto::fromModelCollection($invoices);
+    }
 
     public function getInvoiceByOrderId(int $orderId): InvoiceResponseDto
     {

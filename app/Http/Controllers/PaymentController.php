@@ -38,4 +38,7 @@ class PaymentController extends Controller
         $this->paymentService->payInvoice($invoiceId,$clientId);
         return response(null,200);
     }
+    public function showInvoicesByClientId(Request $request, int $clientId){
+        return response()->json($this->paymentService->getInvoicesByClientId($clientId),200);
+    }
 }

@@ -28,3 +28,6 @@ Route::get('/procurement-manager-dashboard', function () {
 Route::get('/account-manager-dashboard', function () {
     return Inertia::render('AccountManager');
 });
+Route::get('/accountant-dashboard', function () {
+    return Inertia::render('Accountant');
+});

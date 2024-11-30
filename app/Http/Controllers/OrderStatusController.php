@@ -33,7 +33,19 @@ class OrderStatusController extends Controller
 
         return response()->json(OrderClientResponseDto::fromCollection($orders));
     }
+    public function getProcessingOrderById(Request $request, int $id){
+        $order = Order::with('client')
+            ->whereHas('currentStatus', function ($query) use ($id){
+                $query->where('name', OrderStatusType::Processing->value);
+            })
+            ->where('id', $id)
+            ->first();
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
 
+        return response()->json(OrderClientResponseDto::fromModel($order));
+    }
     public function updateOrderStatus(Request $request, int $orderId)
     {
         $user = $request->user();
