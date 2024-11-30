@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DTOs\Request\ProductRequestDto;
 use App\DTOs\Response\Client\ProductClientResponseDto;
+use App\Models\Product;
 use App\Services\ProductService\Api\ProductServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -54,5 +55,12 @@ class ProductController extends Controller
     public function getStockOfProduct(Request $request, int $id): JsonResponse{
         $stock = $this->productService->getStockOfProduct($id);
         return response()->json(["stock"=>$stock],200);
+    }
+    public function getProductSupplierId(Request $request, int $id): JsonResponse{
+        $product = Product::find($id);
+        if(!$product){
+            return response()->json("Product with id {$id} not found.",404);
+        }
+        return response()->json(["supplierId"=>$product->supplier_id],200);
     }
 }

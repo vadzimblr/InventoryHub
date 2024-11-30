@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/product/{id}',[ProductController::class,'showProduct']);
     Route::patch('/product/{id}/add-stock/{amount}',[ProductController::class,'addStock']);
     Route::patch('/product/{id}/remove-stock/{amount}',[ProductController::class,'removeStock']);
+    Route::get('/product/{id}/supplier',[ProductController::class,'getProductSupplierId']);
 
     Route::get('/account-manager/orders/pending',[OrderStatusController::class,'getPendingOrders']);
     Route::patch('/account-manager/order/{orderId}/mark-as-processing',[OrderStatusController::class,'markOrderAsProcessing']);
