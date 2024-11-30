@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderStatusController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierOrderController;
@@ -29,6 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('client/order/{orderId}',[OrderController::class,'showOrderDetails']);
     Route::get('client/order/{orderId}/status/history',[OrderStatuscontroller::class,'getOrderHistory']);
     Route::get('client/orders',[OrderController::class,'showAllOrders']);
+    Route::get('client/invoices',[PaymentController::class,'showUnpaidInvoices']);
+    Route::patch('client/invoice/{invoiceId}/pay',[PaymentController::class,'payInvoice']);
 
     Route::post('/product',[ProductController::class,'createProduct']);
     Route::put('/product/{id}',[ProductController::class,'updateProduct']);
@@ -47,6 +50,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/procurement-manager/supplier-order/{orderId}',[SupplierOrderController::class,'getSupplierOrderById']);
     Route::get('/procurement-manager/supplier-orders/supplier/{supplierId}',[SupplierOrderController::class,'getAllSupplierOrders']);
 
+    Route::post('/accountant/invoice',[PaymentController::class,'createInvoice']);
+    Route::get('/invoice/{invoiceId}',[PaymentController::class,'showInvoice']);
+    Route::get('/invoice/order/{orderId}',[PaymentController::class,'showInvoiceByOrderId']);
 
     Route::patch('/order/{orderId}/status/mark-as-shipped',[OrderStatusController::class,'markOrderAsShipped']);
     Route::patch('/order/{orderId}/status',[OrderStatusController::class,'updateOrderStatus']);
