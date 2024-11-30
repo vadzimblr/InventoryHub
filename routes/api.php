@@ -36,6 +36,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/product/{id}/add-stock/{amount}',[ProductController::class,'addStock']);
     Route::patch('/product/{id}/remove-stock/{amount}',[ProductController::class,'removeStock']);
 
+    Route::get('/account-manager/orders/pending',[OrderStatusController::class,'getPendingOrders']);
+    Route::patch('/account-manager/order/{orderId}/mark-as-processing',[OrderStatusController::class,'markOrderAsProcessing']);
+    Route::patch('/account-manager/order/{orderId}/mark-as-cancelled',[OrderStatusController::class,'markOrderAsCancelled']);
+    Route::get('/account-manager/product/{id}/stock',[ProductController::class,'getStockOfProduct']);
+
     Route::patch('/order/{orderId}/status/mark-as-shipped',[OrderStatusController::class,'markOrderAsShipped']);
     Route::patch('/order/{orderId}/status',[OrderStatusController::class,'updateOrderStatus']);
     Route::get('/orders/status/{status}',[OrderStatusController::class,'getOrdersByStatus']);

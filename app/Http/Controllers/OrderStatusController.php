@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTOs\Response\Client\OrderClientResponseDto;
+use App\DTOs\Response\OrderResponseDto;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\User;
@@ -79,5 +80,34 @@ class OrderStatusController extends Controller
         $history = $this->orderStatusService->getOrderStatusHistory($order);
 
         return response()->json($history);
+    }
+    public function getPendingOrders(Request $request)
+    {
+        $orders = Order::with('currentStatus')
+            ->whereHas('currentStatus', function ($query) {
+                $query->where('name', OrderStatusType::Pending->value);
+            })
+            ->get();
+
+        return response()->json(OrderResponseDto::fromCollection($orders));
+    }
+    public function markOrderAsProcessing(Request $request, int $orderId){
+        $user = Auth::user();
+        $order = Order::findOrFail($orderId);
+
+        if ($order->currentStatus->name !== OrderStatusType::Pending->value) {
+            return response()->json(['error' => 'Order is not ready for shipping'], 400);
+        }
+
+        $this->orderStatusService->changeOrderStatus($order, OrderStatusType::Processing->value, $user);
+
+        return response(null,200);
+    }
+    public function markOrderAsCancelled(Request $request, int $orderId){
+        $user = Auth::user();
+        $order = Order::findOrFail($orderId);
+        $this->orderStatusService->changeOrderStatus($order, OrderStatusType::Cancelled->value, $user);
+
+        return response(null,200);
     }
 }

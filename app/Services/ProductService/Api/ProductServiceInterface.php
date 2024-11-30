@@ -15,4 +15,5 @@ interface ProductServiceInterface
     public function deleteProduct(int $productId): void;
     public function increaseQuantity(float $quantity, int $productId): void;
     public function decreaseQuantity(float $quantity, int $productId): void;
+    public function getStockOfProduct(int $productId): int;
 }

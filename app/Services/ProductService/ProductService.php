@@ -85,4 +85,8 @@ class ProductService implements Api\ProductServiceInterface
         $newQuantity = $product->quantity - $quantity;
         $product->update(['quantity' => $newQuantity]);
     }
+    public function getStockOfProduct(int $productId): int{
+        $product = $this->getProductById($productId);
+        return $product->quantity;
+    }
 }

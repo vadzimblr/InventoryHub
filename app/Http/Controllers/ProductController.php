@@ -49,4 +49,8 @@ class ProductController extends Controller
         $this->productService->decreaseQuantity($amount,$id);
         return response()->json(null,201);
     }
+    public function getStockOfProduct(Request $request, int $id): JsonResponse{
+        $stock = $this->productService->getStockOfProduct($id);
+        return response()->json(["stock"=>$stock],200);
+    }
 }

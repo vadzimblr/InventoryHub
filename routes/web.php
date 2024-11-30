@@ -25,3 +25,6 @@ Route::get('/admin-dashboard', function () {
 Route::get('/procurement-manager-dashboard', function () {
     return Inertia::render('ProcurementManager');
 });
+Route::get('/account-manager-dashboard', function () {
+    return Inertia::render('AccountManager');
+});
