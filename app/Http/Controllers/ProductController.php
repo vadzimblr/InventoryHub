@@ -7,6 +7,7 @@ use App\DTOs\Response\Client\ProductClientResponseDto;
 use App\Services\ProductService\Api\ProductServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -27,8 +28,9 @@ class ProductController extends Controller
     }
 
     public function createProduct(Request $request): JsonResponse{
-        $productRequestDto = ProductRequestDto::fromArray($request->all());
-        $productRequestDto->
+        $productDetails = $request->all();
+        $productDetails['createdBy'] = Auth::user()->id;
+        $productRequestDto = ProductRequestDto::fromArray($productDetails);
         $responseContent = $this->productService->storeProduct($productRequestDto);
         return response()->json($responseContent,201);
     }

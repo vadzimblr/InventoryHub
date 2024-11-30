@@ -6,10 +6,10 @@
                     Поставщики
                 </button>
                 <button @click="currentView = 'CreateProduct'" :class="{ active: currentView === 'CreateProduct' }">
-                    Добавить товар
+                    Товары
                 </button>
                 <button @click="currentView = 'CreateOrder'" :class="{ active: currentView === 'CreateOrder' }">
-                    Разместить заказ
+                    Поставки
                 </button>
                 <button @click="currentView = 'Notifications'" :class="{ active: currentView === 'Notifications' }">
                     Уведомления
