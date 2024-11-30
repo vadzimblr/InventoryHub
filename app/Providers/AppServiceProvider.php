@@ -12,7 +12,9 @@ use App\Services\OrderService\OrderService;
 use App\Services\OrderService\OrderStatusService;
 use App\Services\ProductService\Api\ProductServiceInterface;
 use App\Services\ProductService\ProductService;
+use App\Services\SupplierService\Api\SupplierOrderServiceInterface;
 use App\Services\SupplierService\Api\SupplierServiceInterface;
+use App\Services\SupplierService\SupplierOrderService;
 use App\Services\SupplierService\SupplierService;
 use Illuminate\Support\ServiceProvider;
 
@@ -29,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProductServiceInterface::class, ProductService::class);
         $this->app->bind(OrderServiceInterface::class, OrderService::class);
         $this->app->bind(OrderStatusServiceInterface::class, OrderStatusService::class);
+        $this->app->bind(SupplierOrderServiceInterface::class, SupplierOrderService::class);
     }
 
     /**

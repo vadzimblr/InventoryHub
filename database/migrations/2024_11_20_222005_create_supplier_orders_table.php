@@ -14,13 +14,16 @@ return new class extends Migration
         Schema::create('supplier_orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('supplier_id')->constrained('suppliers');
-            $table->decimal('total_amount',10,2);
+            $table->foreignId('product_id')->constrained('products');
+            $table->decimal('total_amount', 10, 2);
             $table->foreignId('manager_id')->references('id')->on('users');
             $table->foreignId('order_status_id')->constrained('order_statuses');
+            $table->float('quantity');
             $table->timestamp('created_at')->useCurrent();
             $table->softDeletes();
         });
     }
+
     /**
      * Reverse the migrations.
      */

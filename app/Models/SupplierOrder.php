@@ -12,24 +12,33 @@ class SupplierOrder extends Model
         'created_at',
         'manager_id',
         'order_status_id',
+        'product_id',
+        'quantity',
     ];
+    public $timestamps = true;
+    const UPDATED_AT = null;
+
     public function supplier(){
-        return $this->belongsTo(Supplier::class,'supplier_id');
+        return $this->belongsTo(Supplier::class, 'supplier_id');
     }
+
+    public function product(){
+        return $this->belongsTo(Product::class, 'product_id');
+    }
+
     public function manager(){
-        return $this->belongsTo(User::class,'manager_id');
+        return $this->belongsTo(User::class, 'manager_id');
     }
+
     public function orderStatus(){
-        return $this->belongsTo(OrderStatus::class,'order_status_id');
+        return $this->belongsTo(OrderStatus::class, 'order_status_id');
     }
+
     protected static function booted()
     {
         static::saving(function ($order) {
-            $totalAmount = $order->supplierOrderItems->sum(function ($item) {
-                return $item->total_amount;
-            });
-
-            $order->total_amount = $totalAmount;
+            $product = $order->product;
+            $order->total_amount = $product->price * $order->quantity;
         });
     }
 }

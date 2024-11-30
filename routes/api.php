@@ -6,6 +6,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupplierOrderController;
 use App\Http\Controllers\UserCredentialsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/account-manager/order/{orderId}/mark-as-processing',[OrderStatusController::class,'markOrderAsProcessing']);
     Route::patch('/account-manager/order/{orderId}/mark-as-cancelled',[OrderStatusController::class,'markOrderAsCancelled']);
     Route::get('/account-manager/product/{id}/stock',[ProductController::class,'getStockOfProduct']);
+
+    Route::post('/procurement-manager/supplier-order',[SupplierOrderController::class,'placeSupplierOrder']);
+    Route::get('/procurement-manager/supplier-order/{orderId}',[SupplierOrderController::class,'getSupplierOrderById']);
+    Route::get('/procurement-manager/supplier-orders/supplier/{supplierId}',[SupplierOrderController::class,'getAllSupplierOrders']);
+
 
     Route::patch('/order/{orderId}/status/mark-as-shipped',[OrderStatusController::class,'markOrderAsShipped']);
     Route::patch('/order/{orderId}/status',[OrderStatusController::class,'updateOrderStatus']);
