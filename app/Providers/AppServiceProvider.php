@@ -18,6 +18,8 @@ use App\Services\SupplierService\Api\SupplierOrderServiceInterface;
 use App\Services\SupplierService\Api\SupplierServiceInterface;
 use App\Services\SupplierService\SupplierOrderService;
 use App\Services\SupplierService\SupplierService;
+use App\Services\WaybillService\Api\WaybillServiceInterface;
+use App\Services\WaybillService\WaybillService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -35,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(OrderStatusServiceInterface::class, OrderStatusService::class);
         $this->app->bind(SupplierOrderServiceInterface::class, SupplierOrderService::class);
         $this->app->bind(PaymentServiceInterface::class, PaymentService::class);
+        $this->app->bind(WaybillServiceInterface::class, WaybillService::class);
     }
 
     /**

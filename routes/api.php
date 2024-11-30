@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierOrderController;
 use App\Http\Controllers\UserCredentialsController;
+use App\Http\Controllers\WaybillController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -64,6 +65,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/order/{orderId}/status',[OrderStatusController::class,'updateOrderStatus']);
     Route::get('/orders/status/{status}',[OrderStatusController::class,'getOrdersByStatus']);
     Route::get('/order/{id}/status/processing',[OrderStatusController::class,'getProcessingOrderById']);
+    Route::post('/storekeeper/waybill',[WaybillController::class,'createWaybill']);
+    Route::get('/storekeeper/waybill/{waybillId}',[WaybillController::class,'getWaybillById']);
+    Route::get('/storekeeper/waybills/',[WaybillController::class,'getWaybills']);
 
 });
 

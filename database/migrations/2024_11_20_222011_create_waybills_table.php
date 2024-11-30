@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('waybills', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bill_id')->constrained('bills');
+            $table->foreignId('invoice_id')->constrained('invoices');
             $table->foreignId('storekeeper_id')->constrained('users');
             $table->timestamp('handoff_time')->useCurrent();
             $table->softDeletes();
