@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\Request\BillRequestDto;
 use App\DTOs\Request\InvoiceRequestDto;
 use App\Services\PaymentService\Api\PaymentServiceInterface;
 use Illuminate\Http\Request;
@@ -41,4 +42,33 @@ class PaymentController extends Controller
     public function showInvoicesByClientId(Request $request, int $clientId){
         return response()->json($this->paymentService->getInvoicesByClientId($clientId),200);
     }
+
+    public function createBill(Request $request)
+    {
+        $billDetails = $request->all();
+        $billDetails['accountantId'] = Auth::user()->id;
+        $billDto = BillRequestDto::fromArray($billDetails);
+        $billResponse = $this->paymentService->createBill($billDto);
+
+        return response()->json($billResponse, 201);
+    }
+
+    public function showBillById(int $billId)
+    {
+        $billResponse = $this->paymentService->getBillById($billId);
+        return response()->json($billResponse, 200);
+    }
+
+    public function showUnpaidBills(Request $request)
+    {
+        $unpaidBills = $this->paymentService->getUnpaidBills();
+        return response()->json($unpaidBills, 200);
+    }
+
+    public function payBill(Request $request, int $billId)
+    {
+        $this->paymentService->payBill($billId);
+        return response(null, 200);
+    }
+
 }

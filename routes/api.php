@@ -50,10 +50,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/procurement-manager/supplier-order/{orderId}',[SupplierOrderController::class,'getSupplierOrderById']);
     Route::get('/procurement-manager/supplier-orders/supplier/{supplierId}',[SupplierOrderController::class,'getAllSupplierOrders']);
 
+    Route::post('/accountant/bill',[PaymentController::class,'createBill']);
+    Route::get('/accountant/bill/{billId}',[PaymentController::class,'showBillById']);
+    Route::get('/accountant/bills/unpaid',[PaymentController::class,'showUnpaidBills']);
+    Route::patch('/accountant/bill/{billId}/pay',[PaymentController::class,'payBill']);
     Route::post('/accountant/invoice',[PaymentController::class,'createInvoice']);
     Route::get('/accountant/invoices/client/{clientId}',[PaymentController::class,'showInvoicesByClientId']);
     Route::get('/invoice/{invoiceId}',[PaymentController::class,'showInvoice']);
     Route::get('/invoice/order/{orderId}',[PaymentController::class,'showInvoiceByOrderId']);
+
 
     Route::patch('/order/{orderId}/status/mark-as-shipped',[OrderStatusController::class,'markOrderAsShipped']);
     Route::patch('/order/{orderId}/status',[OrderStatusController::class,'updateOrderStatus']);

@@ -4,12 +4,16 @@ namespace App\Services\PaymentService;
 
 namespace App\Services\PaymentService;
 
+use App\DTOs\Request\BillRequestDto;
 use App\DTOs\Request\InvoiceRequestDto;
+use App\DTOs\Response\BillResponseDto;
 use App\DTOs\Response\InvoiceResponseDto;
 use App\Enums\OrderStatusType;
+use App\Models\Bill;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\OrderStatus;
+use App\Models\SupplierOrder;
 use App\Services\PaymentService\Api\PaymentServiceInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -138,6 +142,70 @@ class PaymentService implements PaymentServiceInterface
         }
 
         $order->update(['order_status_id' => $orderStatus->id]);
+    }
+
+    public function getBillById(int $billId): BillResponseDto
+    {
+        $bill = Bill::find($billId);
+
+        if (!$bill) {
+            throw new \Exception("Bill with id {$billId} not found");
+        }
+
+        return BillResponseDto::fromModel($bill);
+    }
+
+    public function getUnpaidBills(): array
+    {
+        $unpaidBills = Bill::whereNull('paid_at')
+            ->get();
+
+        return BillResponseDto::fromCollectionModels($unpaidBills);
+    }
+
+    public function payBill(int $billId): void
+    {
+        $bill = Bill::find($billId);
+
+        if (!$bill) {
+            throw new \Exception("Bill with id {$billId} not found");
+        }
+
+        if ($bill->paid_at !== null) {
+            throw new \Exception("Bill with id {$billId} is already paid");
+        }
+
+        DB::transaction(function () use ($bill) {
+            $bill->paid_at = now();
+            $bill->save();
+
+            $this->updateSupplierOrderStatusToPaid($bill->supplierOrder);
+        });
+    }
+
+    private function updateSupplierOrderStatusToPaid(SupplierOrder $supplierOrder): void
+    {
+        $paidStatus = OrderStatus::where('name', OrderStatusType::Paid->value)->first();
+
+        if (!$paidStatus) {
+            Log::error("Order status 'Paid' not found");
+            throw new \Exception("Order status 'Paid' not found");
+        }
+
+        $supplierOrder->update(['order_status_id' => $paidStatus->id]);
+    }
+    public function createBill(BillRequestDto $billRequestDto): BillResponseDto
+    {
+        $bill = $billRequestDto->toModel();
+        $supplierOrder = SupplierOrder::find($bill->supplier_order_id);
+        if(!$supplierOrder) {
+            throw new \Exception('Supplier with id: {$bill->supplier_order_id} order not found');
+        }
+        $unpaidStatus = OrderStatus::where(['name'=>OrderstatusType::Unpaid->value])->first();
+        $supplierOrder->order_status_id = $unpaidStatus->id;
+        $supplierOrder->save();
+        $bill->save();
+        return BillResponseDto::fromModel($bill);
     }
 }
 
