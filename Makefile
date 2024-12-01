@@ -22,6 +22,7 @@ install: \
 	install-app-env-file \
 	install-database \
 	install-migrations \
+	install-frontend-packages \
 	start
 
 test:

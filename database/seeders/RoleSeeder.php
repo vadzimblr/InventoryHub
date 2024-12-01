@@ -27,18 +27,5 @@ class RoleSeeder extends Seeder
             Role::firstOrCreate(['name' => $roleName]);
         }
 
-//        $permissions = [
-//            'edit users',
-//        ];
-//
-//        foreach ($permissions as $permissionName) {
-//            Permission::firstOrCreate(['name' => $permissionName]);
-//        }
-//
-//        $adminRole = Role::where('name', 'admin')->first();
-//        if ($adminRole) {
-//            $adminRole->givePermissionTo(['edit users']);
-//        }
-
     }
 }

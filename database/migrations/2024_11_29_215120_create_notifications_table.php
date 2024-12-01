@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('sender_id')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('receiver_id')->references('id')->on('user')->onDelete('set null');
+            $table->foreign('receiver_id')->references('id')->on('users')->onDelete('set null');
             $table->foreign('handler_id')->references('id')->on('users')->onDelete('set null');
             $table->foreign('department_id')->references('id')->on('roles')->onDelete('set null');
 
