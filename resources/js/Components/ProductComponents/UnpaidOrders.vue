@@ -1,56 +1,60 @@
 <template>
     <div class="unpaid-orders-container">
-        <h2 class="text-2xl font-semibold mb-6">Неоплаченные заказы</h2>
-        <div v-if="unpaidOrders.length > 0">
-            <div v-for="(order, index) in unpaidOrders" :key="order.id" class="unpaid-order bg-white p-6 rounded-lg shadow-lg mb-4">
-                <h3 class="text-xl font-medium mb-2">Заказ #{{ order.id }}</h3>
-                <p><strong>Адрес:</strong> {{ order.address }}</p>
-                <p><strong>Сумма:</strong> {{ order.totalAmount }} ₽</p>
-                <p><strong>Статус:</strong> {{ order.status }}</p>
-                <div class="mt-4">
-                    <button @click="payOrder(order.id)" class="bg-green-500 text-white p-3 rounded-md hover:bg-green-600">
+        <h2 class="text-2xl font-semibold mb-6">Неоплаченные инвойсы</h2>
+        <div v-if="unpaidInvoices.length > 0">
+            <div v-for="(invoice, index) in unpaidInvoices" :key="invoice.id" class="unpaid-order bg-white p-6 rounded-lg shadow-lg mb-4">
+                <h3 class="text-xl font-medium mb-2">Инвойс #{{ invoice.id }}</h3>
+                <p><strong>Заказ:</strong> #{{ invoice.orderId }}</p>
+                <p><strong>Дата создания:</strong> {{ invoice.createdAt }}</p>
+                <p v-if="invoice.paidAt">Оплачен: {{ invoice.paidAt }}</p>
+                <div class="mt-4" v-if="!invoice.paidAt">
+                    <button @click="payInvoice(invoice.id)" class="bg-green-500 text-white p-3 rounded-md hover:bg-green-600">
                         Оплатить
                     </button>
                 </div>
             </div>
         </div>
         <div v-else>
-            <p>Нет неоплаченных заказов.</p>
+            <p>Нет неоплаченных инвойсов.</p>
         </div>
     </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-    props: {
-        ordersHistory: Array,
-    },
-    computed: {
-        unpaidOrders() {
-            return this.ordersHistory.filter(order => order.status === 'неоплачен');
-        },
+    data() {
+        return {
+            unpaidInvoices: [],
+        };
     },
     methods: {
-        async payOrder(orderId) {
+        async fetchUnpaidInvoices() {
             try {
-                const response = await this.simulatePayment(orderId);
-
-                if (response.status === 'оплачен') {
-                    alert(`Заказ #${orderId} оплачен!`);
-                    this.$emit('order-updated');
-                }
+                const response = await axios.get("/api/client/invoices");
+                this.unpaidInvoices = response.data.filter(invoice => !invoice.paidAt);
             } catch (error) {
-                console.error('Ошибка при оплате заказа:', error);
-                alert('Не удалось выполнить оплату.');
+                console.error("Ошибка при загрузке инвойсов:", error);
             }
         },
-        async simulatePayment(orderId) {
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    resolve({ id: orderId, status: 'оплачен' });
-                }, 1000);
-            });
+
+        async payInvoice(invoiceId) {
+            try {
+                const response = await axios.patch(`/api/client/invoice/${invoiceId}/pay`);
+
+                if (response.status === 200) {
+                    alert(`Инвойс #${invoiceId} успешно оплачен!`);
+                    this.fetchUnpaidInvoices();
+                }
+            } catch (error) {
+                console.error("Ошибка при оплате инвойса:", error);
+                alert("Не удалось выполнить оплату.");
+            }
         },
+    },
+    mounted() {
+        this.fetchUnpaidInvoices();
     },
 };
 </script>

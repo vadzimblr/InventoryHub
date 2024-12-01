@@ -11,7 +11,7 @@
                 <button @click="currentView = 'Notifications'" :class="{ active: currentView === 'Notifications' }">
                     Уведомления
                 </button>
-                <button @click="currentView = 'Notifications'" :class="{ active: currentView === 'Notifications' }">
+                <button @click="logout">
                     Выйти
                 </button>
             </nav>
@@ -57,8 +57,15 @@ export default {
                 this.fromDepartment = "account-manager"
             }
         }
+    },
+    methods: {
+        logout() {
+            localStorage.removeItem("authToken");
+            window.location.href = "/login";
+        }
     }
 };
+
 </script>
 
 <style>

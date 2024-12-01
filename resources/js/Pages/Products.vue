@@ -8,7 +8,7 @@
                 <button @click="currentView = 'Order'" :class="{ active: currentView === 'Order' }">
                     Заказы
                 </button>
-                <button @click="currentView = 'Notifications'" :class="{ active: currentView === 'Notifications' }">
+                <button @click="logout">
                     Выйти
                 </button>
             </nav>
@@ -43,8 +43,15 @@ export default {
         if(localStorage.getItem('authToken') == null){
             return window.location.href = '/login'
         }
+
         console.log('User data:', this.user);
     },
+    methods: {
+        logout() {
+            localStorage.removeItem("authToken");
+            window.location.href = "/login";
+        }
+    }
 };
 </script>
 

@@ -1,5 +1,11 @@
 <template>
     <div v-if="ordersHistory.length > 0" class="order-history">
+        <div class="mb-4">
+            <button @click="loadOrdersHistory" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
+                Обновить историю заказов
+            </button>
+        </div>
+
         <div v-for="(order, index) in ordersHistory" :key="order.id" class="order-history-item bg-white p-4 rounded-lg shadow-md mb-4">
             <div class="flex justify-between items-center">
                 <h3 class="text-xl font-medium">Заказ #{{ order.id }}</h3>
@@ -16,7 +22,7 @@
             </div>
 
             <div class="mt-4">
-                <button @click="toggleOrderDetails(index)" class="text-blue-500">
+                <button @click="toggleOrderDetails(index)" class="text-white-500 hover:text-white-700">
                     {{ orderDetailsVisible[index] ? 'Скрыть детали' : 'Показать детали' }}
                 </button>
             </div>
@@ -54,7 +60,9 @@ export default {
             try {
                 const response = await axios.get('/api/client/orders');
                 this.ordersHistory = response.data;
-                console.log(this.ordersHistory)
+
+                this.ordersHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
                 this.orderDetailsVisible = Array(this.ordersHistory.length).fill(false);
             } catch (error) {
                 console.error("Ошибка при загрузке истории заказов:", error);
@@ -90,5 +98,13 @@ button:hover {
 
 .order-details {
     margin-top: 10px;
+}
+
+.bg-blue-500 {
+    background-color: #3b82f6;
+}
+
+.bg-blue-500:hover {
+    background-color: #2563eb;
 }
 </style>

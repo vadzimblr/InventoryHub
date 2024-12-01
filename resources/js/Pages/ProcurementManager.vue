@@ -14,6 +14,9 @@
                 <button @click="currentView = 'Notifications'" :class="{ active: currentView === 'Notifications' }">
                     Уведомления
                 </button>
+                <button @click="logout">
+                    Выйти
+                </button>
             </nav>
         </header>
 
@@ -55,7 +58,14 @@ export default {
                 this.fromDepartment = "procurement-manager"
             }
         }
+    },
+    methods: {
+        logout() {
+            localStorage.removeItem("authToken");
+            window.location.href = "/login";
+        }
     }
+
 };
 </script>
 

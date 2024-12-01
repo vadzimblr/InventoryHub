@@ -1,8 +1,9 @@
 <script setup>
-import {ref, onMounted} from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 const pendingOrders = ref([]);
+const processingOrders = ref([]); // Новый ref для заказов со статусом "processing"
 const expandedOrderId = ref(null);
 const confirmationDialog = ref({
     show: false,
@@ -20,12 +21,22 @@ const fetchPendingOrders = async () => {
     }
 };
 
+const fetchProcessingOrders = async () => {
+    try {
+        const response = await axios.get('/api/orders/status/processing');
+        processingOrders.value = response.data;
+    } catch (error) {
+        console.error('Ошибка при загрузке заказов в процессе:', error);
+    }
+};
+
 const updateOrderStatus = async () => {
-    const {orderId, action} = confirmationDialog.value;
+    const { orderId, action } = confirmationDialog.value;
     const url = `/api/account-manager/order/${orderId}/${action}`;
     try {
         await axios.patch(url);
         fetchPendingOrders();
+        fetchProcessingOrders(); // Обновляем список заказов в процессе
         confirmationDialog.value.show = false;
     } catch (error) {
         console.error(`Ошибка при обновлении статуса заказа ${orderId}:`, error);
@@ -54,17 +65,23 @@ const closeConfirmationDialog = () => {
 
 const refreshOrders = () => {
     fetchPendingOrders();
+    fetchProcessingOrders();
 };
 
-onMounted(fetchPendingOrders);
+onMounted(() => {
+    fetchPendingOrders();
+    fetchProcessingOrders();
+});
 </script>
 
 <template>
     <div class="pending-orders">
         <h1><strong>Заказы в ожидании</strong></h1>
+        <br>
         <div class="refresh-button-container">
             <button @click="refreshOrders" class="refresh-button">Обновить заказы</button>
         </div>
+        <br>
         <br>
         <div v-if="pendingOrders.length === 0" class="empty">
             <p>Нет заказов в ожидании.</p>
@@ -106,6 +123,46 @@ onMounted(fetchPendingOrders);
                     <button @click.stop="openConfirmationDialog(order.id, 'mark-as-cancelled')" class="cancel">
                         Отменить
                     </button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <h1><strong>Заказы в обработке</strong></h1>
+        <br>
+        <br>
+        <div v-if="processingOrders.length === 0" class="empty">
+            <p>Нет заказов в процессе.</p>
+        </div>
+        <div v-else class="order-list">
+            <div
+                v-for="order in processingOrders"
+                :key="order.id"
+                class="order-card"
+                @click="toggleOrderDetails(order.id)"
+            >
+                <div class="order-header">
+                    <h2>Заказ #{{ order.id }}</h2>
+                    <p><strong>Общая сумма:</strong> ${{ order.totalAmount }}</p>
+                    <p><strong>Адрес:</strong> {{ order.address }}</p>
+                    <p><strong>Создан:</strong> {{ order.createdAt }}</p>
+                </div>
+                <div
+                    v-if="expandedOrderId === order.id"
+                    class="order-details"
+                >
+                    <h3>Товары:</h3>
+                    <ul>
+                        <li
+                            v-for="item in order.orderItems"
+                            :key="item.productId"
+                        >
+                            <strong>ID товара: {{ item.productId }}</strong>
+                            <p>{{ item.quantity }} x {{ item.productName }} ({{ item.unit }}) - ${{
+                                    item.totalAmount
+                                }}</p>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
