@@ -3,9 +3,7 @@ import {ref, onMounted} from 'vue';
 import axios from 'axios';
 
 const pendingOrders = ref([]);
-
 const expandedOrderId = ref(null);
-
 const confirmationDialog = ref({
     show: false,
     orderId: null,
@@ -27,7 +25,7 @@ const updateOrderStatus = async () => {
     const url = `/api/account-manager/order/${orderId}/${action}`;
     try {
         await axios.patch(url);
-        pendingOrders.value = pendingOrders.value.filter(order => order.id !== orderId);
+        fetchPendingOrders();
         confirmationDialog.value.show = false;
     } catch (error) {
         console.error(`Ошибка при обновлении статуса заказа ${orderId}:`, error);
@@ -54,12 +52,20 @@ const closeConfirmationDialog = () => {
     confirmationDialog.value.show = false;
 };
 
+const refreshOrders = () => {
+    fetchPendingOrders();
+};
+
 onMounted(fetchPendingOrders);
 </script>
 
 <template>
     <div class="pending-orders">
         <h1><strong>Заказы в ожидании</strong></h1>
+        <div class="refresh-button-container">
+            <button @click="refreshOrders" class="refresh-button">Обновить заказы</button>
+        </div>
+        <br>
         <div v-if="pendingOrders.length === 0" class="empty">
             <p>Нет заказов в ожидании.</p>
         </div>
@@ -103,6 +109,7 @@ onMounted(fetchPendingOrders);
                 </div>
             </div>
         </div>
+
         <div v-if="confirmationDialog.show" class="modal-backdrop">
             <div class="modal">
                 <p>{{ confirmationDialog.message }}</p>
@@ -182,7 +189,25 @@ button.cancel {
     color: #666;
 }
 
-/* Стили модального окна */
+.refresh-button-container {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.refresh-button {
+    padding: 0.5rem 1rem;
+    background-color: #1e40af;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.refresh-button:hover {
+    background-color: #3b82f6;
+}
+
 .modal-backdrop {
     position: fixed;
     top: 0;

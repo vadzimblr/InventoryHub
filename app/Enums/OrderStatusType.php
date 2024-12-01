@@ -12,4 +12,5 @@ enum OrderStatusType: string
     case Shipped = 'shipped';
     case Delivered = 'delivered';
     case Cancelled = 'cancelled';
+    case Registered = 'registered';
 }

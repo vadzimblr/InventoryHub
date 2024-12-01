@@ -31,3 +31,6 @@ Route::get('/account-manager-dashboard', function () {
 Route::get('/accountant-dashboard', function () {
     return Inertia::render('Accountant');
 });
+Route::get('/storekeeper-dashboard', function () {
+    return Inertia::render('Storekeeper');
+});

@@ -42,4 +42,8 @@ class SupplierOrderController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
+    public function handleSupplierOrder(Request $request, int $supplierOrderId){
+        $this->supplierOrderService->deleteAsHandled($supplierOrderId);
+        return response()->json(null,204);
+    }
 }

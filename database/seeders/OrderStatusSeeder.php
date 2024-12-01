@@ -21,6 +21,7 @@ class OrderStatusSeeder extends Seeder
             'shipped',
             'delivered',
             'cancelled',
+            'registered'
         ];
 
         foreach ($statuses as $status) {

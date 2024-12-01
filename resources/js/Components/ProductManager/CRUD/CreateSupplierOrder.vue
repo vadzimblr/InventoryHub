@@ -72,6 +72,7 @@
 
             <div v-if="currentPage === 'viewOrderDetails' && currentOrder">
                 <h3>Детали заказа</h3>
+                <p>Id: {{ currentOrder.id }}</p>
                 <p>Поставщик: {{ currentOrder.supplier }}</p>
                 <p>Продукт: {{ currentOrder.product }}</p>
                 <p>Количество: {{ currentOrder.quantity }}</p>

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\DTOs\Response\Client\OrderClientResponseDto;
 use App\DTOs\Response\OrderResponseDto;
+use App\DTOs\Response\SupplierOrderResponseDto;
+use App\Models\OrderStatus;
+use App\Models\SupplierOrder;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\User;
@@ -61,7 +64,22 @@ class OrderStatusController extends Controller
 
         return response(null,200);
     }
+    public function getDeliveredSupplierOrders(Request $request)
+    {
+        $deliveredStatus = OrderStatus::where('name', OrderStatusType::Delivered->value)->first();
 
+        if (!$deliveredStatus) {
+            return response()->json(['error' => 'Delivered status not found.'], 404);
+        }
+
+        $supplierOrders = SupplierOrder::where('order_status_id', $deliveredStatus->id)->get();
+
+        if ($supplierOrders->isEmpty()) {
+            return response()->json(['message' => 'No delivered supplier orders found.'], 200);
+        }
+
+        return response()->json(SupplierOrderResponseDto::fromModelCollection($supplierOrders));
+    }
     /**
      * Warehouse Manager: Mark order as shipped
      */

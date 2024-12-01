@@ -27,8 +27,8 @@ readonly class WaybillService implements Api\WaybillServiceInterface
 
             $order = Order::findOrFail($invoice->order_id);
             $order->load('currentStatus');
-            if ($order->currentStatus->name === OrderStatusType::Delivered->value) {
-                throw new \Exception("Заказ уже доставлен.");
+            if ($order->currentStatus->name !== OrderStatusType::Paid->value) {
+                throw new \Exception("Заказ не оплачен");
             }
 
             $deliveredStatus = OrderStatus::where('name', OrderStatusType::Delivered->value)->firstOrFail();

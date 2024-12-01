@@ -8,11 +8,16 @@ use App\Enums\OrderStatusType;
 use App\Models\OrderStatus;
 use App\Models\Product;
 use App\Models\SupplierOrder;
+use App\Services\ProductService\Api\ProductServiceInterface;
 use App\Services\SupplierService\Api\SupplierOrderServiceInterface;
-use phpDocumentor\Reflection\Exception;
+use Illuminate\Support\Facades\DB;
 
 class SupplierOrderService implements SupplierOrderServiceInterface
 {
+    public function __construct(
+        private readonly ProductServiceInterface $productService,
+    )
+    {}
 
     public function placeSupplierOrder(SupplierOrderRequestDto $supplierOrderDto): SupplierOrderResponseDto
     {
@@ -88,5 +93,21 @@ class SupplierOrderService implements SupplierOrderServiceInterface
         $supplierOrders = $query->get();
 
         return SupplierOrderResponseDto::fromModelCollection($supplierOrders);
+    }
+
+    public function deleteAsHandled(int $orderId): void
+    {
+        DB::transaction(function () use ($orderId) {
+            $supplierOrder = SupplierOrder::find($orderId);
+
+            if (!$supplierOrder) {
+                throw new \Exception("Supplier Order with id: {$orderId} not found");
+            }
+
+            $this->productService->increaseQuantity($supplierOrder->quantity, $supplierOrder->product_id);
+            $registeredStatus = OrderStatus::where(['name' => OrderStatusType::Registered->value])->first();
+            $supplierOrder->order_status_id = $registeredStatus->id;
+            $supplierOrder->save();
+        });
     }
 }

@@ -11,5 +11,6 @@ interface SupplierOrderServiceInterface
     public function simulateSupplierOrderDelivery(int $orderId): void;
     public function getSupplierOrderById(int $orderId): SupplierOrderResponseDto;
     public function getAllSupplierOrders(int $supplierId, array $filters=[]): array;
+    public function deleteAsHandled(int $orderId): void;
 
 }

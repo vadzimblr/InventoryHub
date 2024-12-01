@@ -201,8 +201,8 @@ class PaymentService implements PaymentServiceInterface
         if(!$supplierOrder) {
             throw new \Exception('Supplier with id: {$bill->supplier_order_id} order not found');
         }
-        $unpaidStatus = OrderStatus::where(['name'=>OrderstatusType::Unpaid->value])->first();
-        $supplierOrder->order_status_id = $unpaidStatus->id;
+        $deliveredStatus = OrderStatus::where(['name'=>OrderstatusType::Delivered->value])->first();
+        $supplierOrder->order_status_id = $deliveredStatus->id;
         $supplierOrder->save();
         $bill->save();
         return BillResponseDto::fromModel($bill);

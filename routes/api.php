@@ -65,9 +65,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/order/{orderId}/status',[OrderStatusController::class,'updateOrderStatus']);
     Route::get('/orders/status/{status}',[OrderStatusController::class,'getOrdersByStatus']);
     Route::get('/order/{id}/status/processing',[OrderStatusController::class,'getProcessingOrderById']);
+
     Route::post('/storekeeper/waybill',[WaybillController::class,'createWaybill']);
     Route::get('/storekeeper/waybill/{waybillId}',[WaybillController::class,'getWaybillById']);
     Route::get('/storekeeper/waybills/',[WaybillController::class,'getWaybills']);
+    Route::delete('/storekeeper/supplier-order/{supplierOrderId}',[SupplierOrderController::class,'handleSupplierOrder']);
+    Route::get('/storekeeper/supplier-orders/delivered',[OrderStatusController::class,'getDeliveredSupplierOrders']);
 
 });
 
