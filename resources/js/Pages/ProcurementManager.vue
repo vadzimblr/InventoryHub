@@ -33,7 +33,36 @@ import CreateOrder from "../Components/ProductManager/CRUD/CreateSupplierOrder.v
 import Notifications from "../Components/Notifications.vue";
 import "@/css/procurement-manager.css";
 import {useToast} from "vue-toastification";
+import axios from "axios";
+import {onBeforeMount} from "vue";
 
+const checkUserRole = async () => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+        try {
+            const response = await axios.get("/api/user/role", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            if (response.data.role !== 'admin' && response.data.role !== 'procurement-manager') {
+                document.title = 'Unauthenticated';
+                window.location.href = '/login'
+            }
+        } catch (error) {
+            console.error("Error fetching user role:", error);
+            window.location.href = '/login'
+        }
+    } else {
+        console.error('No token found, please log in again.');
+        document.title = 'Unauthenticated';
+        window.location.href = '/login'
+    }
+};
+
+onBeforeMount(() => {
+    checkUserRole();
+});
 
 export default {
     components: {

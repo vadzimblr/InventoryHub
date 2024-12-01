@@ -1,3 +1,49 @@
+<script setup>
+import {ref, onMounted, onBeforeMount} from "vue";
+import ClientInvoices from "../Components/Accountant/ClientInvoices.vue";
+import SupplierOrders from "../Components/Accountant/SupplierOrders.vue";
+import Notifications from "../Components/Notifications.vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+
+const currentTab = ref("clientInvoices");
+const department = ref("accountant");
+const router = useRouter();
+
+const checkUserRole = async () => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+        try {
+            const response = await axios.get("/api/user/role", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            if (response.data.role !== 'admin' && response.data.role !== 'accountant') {
+                document.title = 'Unauthenticated';
+                window.location.href = '/login'
+            }
+        } catch (error) {
+            console.error("Error fetching user role:", error);
+            window.location.href = '/login'
+        }
+    } else {
+        console.error('No token found, please log in again.');
+        document.title = 'Unauthenticated';
+        window.location.href = '/login'
+    }
+};
+
+onBeforeMount(() => {
+    checkUserRole();
+});
+
+const logout = () => {
+    localStorage.removeItem("authToken");
+    router.push("/login");
+};
+</script>
+
 <template>
     <div class="w-full h-full">
         <header class="header">
@@ -30,147 +76,3 @@
         </main>
     </div>
 </template>
-
-<script setup>
-import { ref } from "vue";
-import ClientInvoices from "../Components/Accountant/ClientInvoices.vue";
-import SupplierOrders from "../Components/Accountant/SupplierOrders.vue";
-import Notifications from "../Components/Notifications.vue";
-
-const currentTab = ref("clientInvoices");
-const department = ref("accountant");
-
-const logout = () => {
-    localStorage.removeItem("authToken");
-    window.location.href = "/login";
-};
-</script>
-
-<style scoped>
-.header {
-    background-color: #334155;
-    padding: 10px 0;
-    width: 100%;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.navbar {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 0 20px;
-    margin: 0 auto;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #e2e8f0;
-    background-color: #475569;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-}
-
-button.active {
-    background-color: #16a34a;
-    color: #ffffff;
-}
-
-button:hover {
-    background-color: #22c55e;
-    color: #ffffff;
-}
-
-.main {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 20px;
-}
-
-.content {
-    background-color: #f1f5f9;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    padding: 20px;
-    width: 100%;
-    max-width: 800px;
-    animation: fadeIn 0.3s ease-in-out;
-
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-form input,
-form select {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #cbd5e1;
-    border-radius: 5px;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
-}
-
-form input:focus,
-form select:focus {
-    outline: none;
-    border-color: #0ea5e9;
-}
-
-form button {
-    padding: 10px 15px;
-    background-color: #16a34a;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-form button:hover {
-    background-color: #15803d;
-}
-
-form h3 {
-    margin-bottom: 10px;
-}
-
-form button.remove-item {
-    background-color: #ef4444;
-}
-
-form button.remove-item:hover {
-    background-color: #dc2626;
-}
-
-h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #1e293b;
-    text-align: center;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-</style>
