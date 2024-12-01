@@ -18,7 +18,7 @@
         </header>
 
         <main class="main">
-            <component :is="currentView" class="content" />
+            <component :is="currentView" :from-department="fromDepartment" class="content" />
         </main>
     </div>
 </template>
@@ -46,8 +46,16 @@ export default {
     data() {
         return {
             currentView: "SupplierManagement",
+            fromDepartment: ""
         };
     },
+    watch: {
+        currentView(newView){
+            if(newView === "Notifications"){
+                this.fromDepartment = "procurement-manager"
+            }
+        }
+    }
 };
 </script>
 

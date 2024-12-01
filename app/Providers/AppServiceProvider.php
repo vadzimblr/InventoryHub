@@ -6,6 +6,8 @@ use App\Services\AdminService\AdminService;
 use App\Services\AdminService\Api\AdminServiceInterface;
 use App\Services\AuthenticationService;
 use App\Services\AuthenticationServiceInterface;
+use App\Services\NotificationService\Api\NotificationServiceInterface;
+use App\Services\NotificationService\NotificationService;
 use App\Services\OrderService\Api\OrderServiceInterface;
 use App\Services\OrderService\Api\OrderStatusServiceInterface;
 use App\Services\OrderService\OrderService;
@@ -38,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(SupplierOrderServiceInterface::class, SupplierOrderService::class);
         $this->app->bind(PaymentServiceInterface::class, PaymentService::class);
         $this->app->bind(WaybillServiceInterface::class, WaybillService::class);
+        $this->app->bind(NotificationServiceInterface::class,NotificationService::class);
     }
 
     /**

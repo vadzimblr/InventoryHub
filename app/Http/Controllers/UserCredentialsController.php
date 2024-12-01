@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class UserCredentialsController extends Controller
 {
@@ -20,5 +21,10 @@ class UserCredentialsController extends Controller
         }
 
         return response()->json(['message' => 'User not authenticated'], 401);
+    }
+    public function getDepartments(Request $request): JsonResponse
+    {
+        $roles = Role::pluck('name');
+        return response()->json($roles);
     }
 }

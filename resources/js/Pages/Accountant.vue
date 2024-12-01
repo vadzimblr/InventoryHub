@@ -1,6 +1,5 @@
 <template>
     <div class="w-full h-full">
-        <!-- Шапка -->
         <header class="header">
             <nav class="navbar">
                 <button @click="currentTab = 'clientInvoices'" :class="{ active: currentTab === 'clientInvoices' }">
@@ -9,19 +8,24 @@
                 <button @click="currentTab = 'supplierOrders'" :class="{ active: currentTab === 'supplierOrders' }">
                     Счета поставщикам
                 </button>
+                <button @click="currentTab = 'notifications'" :class="{ active: currentTab === 'notifications' }">
+                    Уведомления
+                </button>
                 <button @click="logout">
                     Выйти
                 </button>
             </nav>
         </header>
 
-        <!-- Основной контент -->
         <main class="main">
             <div v-if="currentTab === 'clientInvoices'" class="content">
                 <ClientInvoices />
             </div>
             <div v-if="currentTab === 'supplierOrders'" class="content">
                 <SupplierOrders />
+            </div>
+            <div v-if="currentTab === 'notifications'" class="content">
+                <Notifications :fromDepartment="department" />
             </div>
         </main>
     </div>
@@ -31,10 +35,11 @@
 import { ref } from "vue";
 import ClientInvoices from "../Components/Accountant/ClientInvoices.vue";
 import SupplierOrders from "../Components/Accountant/SupplierOrders.vue";
+import Notifications from "../Components/Notifications.vue";
 
 const currentTab = ref("clientInvoices");
+const department = ref("accountant");
 
-// Функция выхода
 const logout = () => {
     localStorage.removeItem("authToken");
     window.location.href = "/login";
@@ -42,9 +47,8 @@ const logout = () => {
 </script>
 
 <style scoped>
-/* Навигация на всю ширину экрана */
 .header {
-    background-color: #334155; /* Глубокий серый с оттенком синего */
+    background-color: #334155;
     padding: 10px 0;
     width: 100%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -60,13 +64,12 @@ const logout = () => {
     margin: 0 auto;
 }
 
-/* Кнопки навигации */
 button {
     padding: 10px 20px;
     font-size: 14px;
     font-weight: bold;
-    color: #e2e8f0; /* Светло-серый */
-    background-color: #475569; /* Тусклый серый */
+    color: #e2e8f0;
+    background-color: #475569;
     border: none;
     border-radius: 25px;
     cursor: pointer;
@@ -75,16 +78,15 @@ button {
 }
 
 button.active {
-    background-color: #16a34a; /* Зеленый */
-    color: #ffffff; /* Белый */
-}
-
-button:hover {
-    background-color: #22c55e; /* Светлый зеленый */
+    background-color: #16a34a;
     color: #ffffff;
 }
 
-/* Основной контент */
+button:hover {
+    background-color: #22c55e;
+    color: #ffffff;
+}
+
 .main {
     flex: 1;
     display: flex;
@@ -94,7 +96,7 @@ button:hover {
 }
 
 .content {
-    background-color: #f1f5f9; /* Светло-серый */
+    background-color: #f1f5f9;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding: 20px;
@@ -104,7 +106,6 @@ button:hover {
 
 }
 
-/* Стили форм */
 form {
     display: flex;
     flex-direction: column;
@@ -116,7 +117,7 @@ form select {
     width: 100%;
     padding: 10px;
     font-size: 14px;
-    border: 1px solid #cbd5e1; /* Светлый серый */
+    border: 1px solid #cbd5e1;
     border-radius: 5px;
     box-sizing: border-box;
     transition: border-color 0.3s ease;
@@ -125,12 +126,12 @@ form select {
 form input:focus,
 form select:focus {
     outline: none;
-    border-color: #0ea5e9; /* Голубой */
+    border-color: #0ea5e9;
 }
 
 form button {
     padding: 10px 15px;
-    background-color: #16a34a; /* Зеленый */
+    background-color: #16a34a;
     color: white;
     border: none;
     border-radius: 5px;
@@ -139,31 +140,28 @@ form button {
 }
 
 form button:hover {
-    background-color: #15803d; /* Темный зеленый */
+    background-color: #15803d;
 }
 
-/* Дополнительные элементы формы */
 form h3 {
     margin-bottom: 10px;
 }
 
 form button.remove-item {
-    background-color: #ef4444; /* Красный */
+    background-color: #ef4444;
 }
 
 form button.remove-item:hover {
-    background-color: #dc2626; /* Темный красный */
+    background-color: #dc2626;
 }
 
-/* Стили заголовков */
 h2 {
     margin-bottom: 20px;
     font-size: 24px;
-    color: #1e293b; /* Темно-синий */
+    color: #1e293b;
     text-align: center;
 }
 
-/* Эффект появления контента */
 @keyframes fadeIn {
     from {
         opacity: 0;

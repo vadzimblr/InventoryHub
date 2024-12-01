@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\PaymentController;
@@ -72,6 +73,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/storekeeper/supplier-order/{supplierOrderId}',[SupplierOrderController::class,'handleSupplierOrder']);
     Route::get('/storekeeper/supplier-orders/delivered',[OrderStatusController::class,'getDeliveredSupplierOrders']);
 
+    Route::post('/notifications', [NotificationController::class, 'create']);
+    Route::get('/notifications/department/{department}', [NotificationController::class, 'getForDepartment']);
+    Route::patch('/notifications/{notificationId}/handle', [NotificationController::class, 'handle']);
+    Route::get('/notifications/unfinished', [NotificationController::class, 'getUnfinishedForUser']);
+    Route::patch('/notifications/{notificationId}/finish', [NotificationController::class, 'markAsFinished']);
+    Route::get('/departments',[UserCredentialsController::class,'getDepartments']);
 });
 
 Route::post('/login', [AuthController::class, 'login']);
